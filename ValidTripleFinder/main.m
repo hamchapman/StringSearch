@@ -16,11 +16,18 @@ typedef enum difficulties {
 NSMutableArray *difficultyArrayCreator(Difficulty, NSDictionary *);
 bool guessContainsValidSetOfLetters(NSString *, NSString *);
 bool isCharInString(NSString *, NSString *);
+NSInteger numberOfLettersInSet(NSString *);
+NSArray *letters(NSString *);
+bool wordContainsLetters(NSString *, NSString *);
+NSRegularExpression *createRegexFromLetters(NSString *);
+
 
 int main(int argc, const char * argv[])
 {
     
     @autoreleasepool {
+        
+        wordContainsLetters(@"hellogoodbye", @"h l g e e");
         
         NSArray *alphabet = [NSArray arrayWithObjects:@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n", @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", nil];
         
@@ -33,36 +40,36 @@ int main(int argc, const char * argv[])
         NSMutableArray *validQuads = [[NSMutableArray alloc] init];
 
         
-//        for(NSString *letter in alphabet)
-//        {
-//            NSString *word1Spaceless = (@"%@", letter);
-//            NSString *word1 = [word1Spaceless stringByAppendingString:@" "];
-//            
-//            for(NSString *letter2 in alphabet)
-//            {
-//                NSString *word2Spaceless = [word1 stringByAppendingString:(@"%@", letter2)];
-//                
-//                [doubles addObject:word2Spaceless];
-//                
-//                NSString *word2 = [word2Spaceless stringByAppendingString:@" "];
-//                
-//                for(NSString *letter3 in alphabet)
-//                {
-//                    NSString *word3Spaceless = [word2 stringByAppendingString:(@"%@", letter3)];
-//
-//                    [triples addObject:word3Spaceless];
-//                    
-//                    NSString *word3 = [word3Spaceless stringByAppendingString:@" "];
-//                    
-//                    for(NSString *letter4 in alphabet)
-//                    {
-//                        NSString *word4Spaceless = [word3 stringByAppendingString:(@"%@", letter4)];
-//                        
-//                        [quads addObject:word4Spaceless];
-//                    }
-//                }
-//            }
-//        }
+        for(NSString *letter in alphabet)
+        {
+            NSString *word1Spaceless = (@"%@", letter);
+            NSString *word1 = [word1Spaceless stringByAppendingString:@" "];
+            
+            for(NSString *letter2 in alphabet)
+            {
+                NSString *word2Spaceless = [word1 stringByAppendingString:(@"%@", letter2)];
+                
+                [doubles addObject:word2Spaceless];
+                
+                NSString *word2 = [word2Spaceless stringByAppendingString:@" "];
+                
+                for(NSString *letter3 in alphabet)
+                {
+                    NSString *word3Spaceless = [word2 stringByAppendingString:(@"%@", letter3)];
+
+                    [triples addObject:word3Spaceless];
+                    
+                    NSString *word3 = [word3Spaceless stringByAppendingString:@" "];
+                    
+                    for(NSString *letter4 in alphabet)
+                    {
+                        NSString *word4Spaceless = [word3 stringByAppendingString:(@"%@", letter4)];
+                        
+                        [quads addObject:word4Spaceless];
+                    }
+                }
+            }
+        }
         
         
         
@@ -73,134 +80,87 @@ int main(int argc, const char * argv[])
         NSArray *words = [wordString componentsSeparatedByString:@"\n"];
         
         
-        NSString *testWord = @"tasteless";
-        NSString *letters = @"t s e s";
+//        NSString *testWord = @"Zeugobranchiata";
+//        NSString *letters = @"z u b";
+//        
+//        if(wordContainsLetters(testWord, letters))
+//        {
+//            NSLog(@"true");
+//        }
+//        else
+//        {
+//            NSLog(@"false");
+//        }
         
-        NSLog(@"%@", guessContainsValidSetOfLetters(testWord, letters));
+
         
         
-        [quads addObject:@"a a a a"];
-        [quads addObject:@"a a a c"];
+        for(NSString __strong *doub in doubles)
+        {
+            NSInteger numberOfOccurrences = 0;
+
+            for(NSString *word in words)
+            {
+                if(guessContainsValidSetOfLetters(word, doub))
+                {
+                    numberOfOccurrences++;
+                }
+            }
+            
+            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
+            
+            if(numberOfOccurrences > 0)
+            {
+                doub = [doub stringByAppendingString:@" "];
+                doub = [doub stringByAppendingString:(@"%lu", numOfOccString)];
+                [validDoubles addObject:doub];
+            }
+        }
         
-        [triples addObject:@"a a a"];
-        [triples addObject:@"a a b"];
-        [triples addObject:@"a a c"];
+        for(NSString __strong *triple in triples)
+        {
+            NSInteger numberOfOccurrences = 0;
+            
+            for(NSString *word in words)
+            {
+                if(guessContainsValidSetOfLetters(word, triple))
+                {
+                    numberOfOccurrences++;
+                }
+            }
+            
+            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
+            
+            if(numberOfOccurrences > 0)
+            {
+                triple = [triple stringByAppendingString:@" "];
+                triple = [triple stringByAppendingString:(@"%lu", numOfOccString)];
+                [validTriples addObject:triple];
+            }
+        }
         
         for(NSString __strong *quad in quads)
         {
             NSInteger numberOfOccurrences = 0;
-
+            
             for(NSString *word in words)
             {
                 if(guessContainsValidSetOfLetters(word, quad))
                 {
                     numberOfOccurrences++;
-                    NSLog(@"%@", word);
                 }
             }
-
+            
             NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-
+            
             if(numberOfOccurrences > 0)
             {
                 quad = [quad stringByAppendingString:@" "];
                 quad = [quad stringByAppendingString:(@"%lu", numOfOccString)];
-                [validDoubles addObject:quad];
+                [validQuads addObject:quad];
             }
         }
         
-        
-        
-        for(NSString __strong *trip in triples)
-        {
-            NSInteger numberOfOccurrences = 0;
-            
-            for(NSString *word in words)
-            {
-                if(guessContainsValidSetOfLetters(word, trip))
-                {
-                    numberOfOccurrences++;
-                }
-            }
-            
-            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-            
-            if(numberOfOccurrences > 0)
-            {
-                trip = [trip stringByAppendingString:@" "];
-                trip = [trip stringByAppendingString:(@"%lu", numOfOccString)];
-                [validTriples addObject:trip];
-            }
-        }
-
-        
-        
-//        for(NSString __strong *doub in doubles)
-//        {
-//            NSInteger numberOfOccurrences = 0;
-//
-//            for(NSString *word in words)
-//            {
-//                if(guessContainsValidSetOfLetters(word, doub))
-//                {
-//                    numberOfOccurrences++;
-//                }
-//            }
-//            
-//            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-//            
-//            if(numberOfOccurrences > 0)
-//            {
-//                doub = [doub stringByAppendingString:@" "];
-//                doub = [doub stringByAppendingString:(@"%lu", numOfOccString)];
-//                [validDoubles addObject:doub];
-//            }
-//        }
-//        
-//        for(NSString __strong *triple in triples)
-//        {
-//            NSInteger numberOfOccurrences = 0;
-//            
-//            for(NSString *word in words)
-//            {
-//                if(guessContainsValidSetOfLetters(word, triple))
-//                {
-//                    numberOfOccurrences++;
-//                }
-//            }
-//            
-//            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-//            
-//            if(numberOfOccurrences > 0)
-//            {
-//                triple = [triple stringByAppendingString:@" "];
-//                triple = [triple stringByAppendingString:(@"%lu", numOfOccString)];
-//                [validTriples addObject:triple];
-//            }
-//        }
-//        
-//        for(NSString __strong *quad in quads)
-//        {
-//            NSInteger numberOfOccurrences = 0;
-//            
-//            for(NSString *word in words)
-//            {
-//                if(guessContainsValidSetOfLetters(word, quad))
-//                {
-//                    numberOfOccurrences++;
-//                }
-//            }
-//            
-//            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-//            
-//            if(numberOfOccurrences > 0)
-//            {
-//                quad = [quad stringByAppendingString:@" "];
-//                quad = [quad stringByAppendingString:(@"%lu", numOfOccString)];
-//                [validQuads addObject:quad];
-//            }
-//        }
-//        
         NSString *listOfValidDoubles = [NSString stringWithFormat:@"%@", [validDoubles componentsJoinedByString:@"\n"]];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -213,11 +173,11 @@ int main(int argc, const char * argv[])
         NSString *triplesFile = [docDir stringByAppendingPathComponent: @"ValidTriples.txt"];
         
         [listOfValidTriples writeToFile: triplesFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
-//
-//        NSString *listOfValidQuads = [NSString stringWithFormat:@"%@", [validQuads componentsJoinedByString:@"\n"]];
-//        NSString *quadsFile = [docDir stringByAppendingPathComponent: @"ValidQuads.txt"];
-//        
-//        [listOfValidQuads writeToFile: quadsFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
+
+        NSString *listOfValidQuads = [NSString stringWithFormat:@"%@", [validQuads componentsJoinedByString:@"\n"]];
+        NSString *quadsFile = [docDir stringByAppendingPathComponent: @"ValidQuads.txt"];
+        
+        [listOfValidQuads writeToFile: quadsFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
         
     }
     return 0;
@@ -281,12 +241,38 @@ NSMutableArray *difficultyArrayCreator(Difficulty chosenDifficulty, NSDictionary
     return triples;
 }
 
+NSInteger numberOfLettersInSet(NSString *setOfLetters)
+{
+    return [letters(setOfLetters) count];
+}
+
+NSArray *letters(NSString *setOfLetters)
+{
+    return [setOfLetters componentsSeparatedByString:@" "];
+}
+
+NSRegularExpression *createRegexFromLetters(NSString *setOfLetters)
+{
+    NSString *regexString = @".*";
+    for (NSString *letter in letters(setOfLetters))
+    {
+        regexString = [regexString stringByAppendingString:letter];
+        regexString = [regexString stringByAppendingString:@".*"];
+    }
+    return [NSRegularExpression regularExpressionWithPattern:(@"%@", regexString)
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:nil];
+}
+
+bool wordContainsLetters(NSString *word, NSString *setOfLetters)
+{
+    return [createRegexFromLetters(setOfLetters) numberOfMatchesInString:word options:0 range:NSMakeRange(0, [word length])] > 0;
+}
 
 bool isCharInString(NSString *charToCheck, NSString *stringToCheckForChar)
 {
     return [stringToCheckForChar rangeOfString:charToCheck options:NSCaseInsensitiveSearch].location != NSNotFound;
 }
-
 
 bool guessContainsValidSetOfLetters(NSString *guess, NSString *setOfLetters)
 {
@@ -295,29 +281,38 @@ bool guessContainsValidSetOfLetters(NSString *guess, NSString *setOfLetters)
     NSInteger numOfLettersInSet = setOfLetters.length - (setOfLetters.length / 2);
     NSInteger numOfCurrentLetter = 1;
     NSString *stringToCheckForChar = guess;
+    NSMutableArray *locationOfLettersFound = [NSMutableArray array];
     
     while(!validGuess && numOfCurrentLetter <= numOfLettersInSet)
     {
         NSRange letterToCheck = {2 * numOfCurrentLetter - 2, 1};
         NSString *charToCheck = [setOfLetters substringWithRange:letterToCheck];
+        NSInteger currentLetterLocationInWord = [stringToCheckForChar rangeOfString:[setOfLetters substringWithRange:letterToCheck] options:NSCaseInsensitiveSearch].location;
+//        NSInteger previousLetterLocationInWord = currentLetterLocationInWord;
+        NSNumber *intCurrentLetterLocationInWord = [NSNumber numberWithInteger:currentLetterLocationInWord];
+        NSInteger intPreviousLetterLocationInWord = 0;
         
-        if(numOfCurrentLetter == 1)
+        if(numOfCurrentLetter > 1)
         {
-            NSInteger letterLocationInWord = [guess rangeOfString:[setOfLetters substringWithRange:letterToCheck] options:NSCaseInsensitiveSearch].location;
+            NSInteger intPreviousLetterLocationInWord = [[locationOfLettersFound objectAtIndex:numOfCurrentLetter - 2] integerValue];
         }
-        else
-        {
-            NSInteger letterLocationInWord = [guess rangeOfString:[setOfLetters substringWithRange:letterToCheck] options:NSCaseInsensitiveSearch].location;
-        }
-        
         if(isCharInString(charToCheck, stringToCheckForChar))
         {
-            if((letterLocationInWord == [guess length] - 1) && numOfCurrentLetter < numOfLettersInSet)
+            if(numOfCurrentLetter == 1)
+            {
+                [locationOfLettersFound addObject:intCurrentLetterLocationInWord];
+            }
+            else
+            {
+                [locationOfLettersFound addObject:[NSNumber numberWithInteger:([guess length] - [stringToCheckForChar length] + currentLetterLocationInWord)]];
+            }
+            
+            if((locationOfLettersFound[numOfCurrentLetter - 1] == [NSNumber numberWithInteger:[guess length] - 1]) && numOfCurrentLetter < numOfLettersInSet)
             {
                 return validGuess;
             }
             
-            NSRange rangeToCheckNext = {letterLocationInWord + 1, [guess length] - (letterLocationInWord+ 1)};
+            NSRange rangeToCheckNext = {currentLetterLocationInWord + intPreviousLetterLocationInWord + 1, [guess length] - (currentLetterLocationInWord + intPreviousLetterLocationInWord + 1)};
             stringToCheckForChar = [guess substringWithRange:rangeToCheckNext];
             
             if(numOfCurrentLetter == numOfLettersInSet)
