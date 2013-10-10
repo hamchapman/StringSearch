@@ -15,16 +15,12 @@ typedef enum difficulties {
 NSMutableArray *difficultyArrayCreator(Difficulty, NSDictionary *);
 NSInteger numberOfLettersInSet(NSString *);
 NSArray *letters(NSString *);
-bool wordContainsLetters(NSString *, NSString *, NSRegularExpression *);
-NSRegularExpression *createRegexFromLetters(NSString *);
 bool lettersAreInWord (NSString *, NSString *);
 
 int main(int argc, const char * argv[])
 {
     
     @autoreleasepool {
-        
-        NSLog(@"Staring program now");
         
         NSArray *alphabet = [NSArray arrayWithObjects:@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n", @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", nil];
         
@@ -74,39 +70,6 @@ int main(int argc, const char * argv[])
         
         NSArray *words = [wordString componentsSeparatedByString:@"\n"];
         
-        NSLog(@"Now the regex solution is starting");
-        NSLog(@"*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n");
-        
-        for(NSString __strong *doub in doubles)
-        {
-            NSInteger numberOfOccurrences = 0;
-            
-            NSRegularExpression *regex = createRegexFromLetters(doub);
-            
-            for(NSString *word in words)
-            {
-                if(wordContainsLetters(word, doub, regex))
-                {
-                    numberOfOccurrences++;
-                }
-            }
-            
-            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-            
-            if(numberOfOccurrences > 0)
-            {
-                doub = [doub stringByAppendingString:@" "];
-                doub = [doub stringByAppendingString:(@"%lu", numOfOccString)];
-                [validDoubles addObject:doub];
-            }
-        }
- 
-        NSLog(@"Now the regex solution has finised");
-        NSLog(@"*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n");
-        
-        NSLog(@"Now the non-regex solution is starting");
-        NSLog(@"*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n");
-        
         for(NSString __strong *doub in doubles)
         {
             NSInteger numberOfOccurrences = 0;
@@ -129,53 +92,49 @@ int main(int argc, const char * argv[])
             }
         }
         
-        NSLog(@"Now the non-regex solution has finished");
-        NSLog(@"*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n");
+        for(NSString __strong *triple in triples)
+        {
+            NSInteger numberOfOccurrences = 0;
+            
+            for(NSString *word in words)
+            {
+                if(lettersAreInWord(word, triple))
+                {
+                    numberOfOccurrences++;
+                }
+            }
+            
+            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
+            
+            if(numberOfOccurrences > 0)
+            {
+                triple = [triple stringByAppendingString:@" "];
+                triple = [triple stringByAppendingString:(@"%lu", numOfOccString)];
+                [validTriples addObject:triple];
+            }
+        }
         
-        
-//        for(NSString __strong *triple in triples)
-//        {
-//            NSInteger numberOfOccurrences = 0;
-//            
-//            for(NSString *word in words)
-//            {
-//                if(wordContainsLetters(word, triple))
-//                {
-//                    numberOfOccurrences++;
-//                }
-//            }
-//            
-//            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-//            
-//            if(numberOfOccurrences > 0)
-//            {
-//                triple = [triple stringByAppendingString:@" "];
-//                triple = [triple stringByAppendingString:(@"%lu", numOfOccString)];
-//                [validTriples addObject:triple];
-//            }
-//        }
-//        
-//        for(NSString __strong *quad in quads)
-//        {
-//            NSInteger numberOfOccurrences = 0;
-//            
-//            for(NSString *word in words)
-//            {
-//                if(wordContainsLetters(word, quad))
-//                {
-//                    numberOfOccurrences++;
-//                }
-//            }
-//            
-//            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
-//            
-//            if(numberOfOccurrences > 0)
-//            {
-//                quad = [quad stringByAppendingString:@" "];
-//                quad = [quad stringByAppendingString:(@"%lu", numOfOccString)];
-//                [validQuads addObject:quad];
-//            }
-//        }
+        for(NSString __strong *quad in quads)
+        {
+            NSInteger numberOfOccurrences = 0;
+            
+            for(NSString *word in words)
+            {
+                if(lettersAreInWord(word, quad))
+                {
+                    numberOfOccurrences++;
+                }
+            }
+            
+            NSString *numOfOccString = [NSString stringWithFormat:@"%ld", (long)numberOfOccurrences];
+            
+            if(numberOfOccurrences > 0)
+            {
+                quad = [quad stringByAppendingString:@" "];
+                quad = [quad stringByAppendingString:(@"%lu", numOfOccString)];
+                [validQuads addObject:quad];
+            }
+        }
         
         NSString *listOfValidDoubles = [NSString stringWithFormat:@"%@", [validDoubles componentsJoinedByString:@"\n"]];
         
@@ -185,15 +144,15 @@ int main(int argc, const char * argv[])
         
         [listOfValidDoubles writeToFile: doublesFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
 
-//        NSString *listOfValidTriples = [NSString stringWithFormat:@"%@", [validTriples componentsJoinedByString:@"\n"]];
-//        NSString *triplesFile = [docDir stringByAppendingPathComponent: @"ValidTriples.txt"];
-//        
-//        [listOfValidTriples writeToFile: triplesFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
-//
-//        NSString *listOfValidQuads = [NSString stringWithFormat:@"%@", [validQuads componentsJoinedByString:@"\n"]];
-//        NSString *quadsFile = [docDir stringByAppendingPathComponent: @"ValidQuads.txt"];
-//        
-//        [listOfValidQuads writeToFile: quadsFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
+        NSString *listOfValidTriples = [NSString stringWithFormat:@"%@", [validTriples componentsJoinedByString:@"\n"]];
+        NSString *triplesFile = [docDir stringByAppendingPathComponent: @"ValidTriples.txt"];
+        
+        [listOfValidTriples writeToFile: triplesFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
+
+        NSString *listOfValidQuads = [NSString stringWithFormat:@"%@", [validQuads componentsJoinedByString:@"\n"]];
+        NSString *quadsFile = [docDir stringByAppendingPathComponent: @"ValidQuads.txt"];
+        
+        [listOfValidQuads writeToFile: quadsFile atomically: NO encoding:NSUTF8StringEncoding error:NULL];
         
     }
     return 0;
@@ -284,22 +243,4 @@ bool lettersAreInWord (NSString *word, NSString *setOfLetters)
     {
         return false;
     }
-}
-
-NSRegularExpression *createRegexFromLetters(NSString *setOfLetters)
-{
-    NSString *regexString = @".*";
-    for (NSString *letter in letters(setOfLetters))
-    {
-        regexString = [regexString stringByAppendingString:letter];
-        regexString = [regexString stringByAppendingString:@".*"];
-    }
-    return [NSRegularExpression regularExpressionWithPattern:(@"%@", regexString)
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:nil];
-}
-
-bool wordContainsLetters(NSString *word, NSString *setOfLetters, NSRegularExpression *regex)
-{
-    return [regex numberOfMatchesInString:word options:0 range:NSMakeRange(0, [word length])] > 0;
 }
